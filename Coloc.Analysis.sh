@@ -56,7 +56,7 @@ then
   loci_file=${out_dir}/${loci[$SLURM_ARRAY_TASK_ID]%".csv"}.${SLURM_ARRAY_TASK_ID}".csv"
 fi
 
-Rscript ${ScriptDir}/Coloc.Analysis.V1.R   ${qtl_dir}/${qtl[$SLURM_ARRAY_TASK_ID]}  ${SumStat_dir}/${gwas[$SLURM_ARRAY_TASK_ID]} $loci_file $ref_genome_prefix $distance_ $type_ $ld_threshold ${out_dir}/$out_pref
+Rscript ${ScriptDir}/Coloc.Analysis.R   ${qtl_dir}/${qtl[$SLURM_ARRAY_TASK_ID]}  ${SumStat_dir}/${gwas[$SLURM_ARRAY_TASK_ID]} $loci_file $ref_genome_prefix $distance_ $type_ $ld_threshold ${out_dir}/$out_pref
 
 if [  ${dupp[${loci[$SLURM_ARRAY_TASK_ID]}]} -gt 1 ]
 then
