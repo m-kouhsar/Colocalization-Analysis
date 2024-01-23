@@ -8,27 +8,25 @@
 #SBATCH --ntasks-per-node=16 # specify number of processors.
 #SBATCH --mail-type=END # send email at job completion
 #SBATCH --mail-user=m.kouhsar@exeter.ac.uk # email address
-#SBATCH --array=0-2
+#SBATCH --array=0-2  ## Number of lines in coloc.inputs.txt file
 
 module load R
 
-ScriptDir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/Scripts
+ScriptDir=./main
 
-SumStat_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/SamStat
-loci_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024
-qtl_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024
+SumStat_dir=./SamStats
+loci_dir=./Regions
+qtl_dir=./QTLs
 
-out_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024/PITT
+out_dir=./Outputs
 
-ref_genome_prefix=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/Scripts/lava/g1000_eur/g1000_eur_rsid
+ref_genome_prefix=./Ref/g1000_eur/g1000_eur_rsid
 
-input_list=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024/coloc.inputs.txt
-
+input_list=./coloc.inputs.txt
 
 ld_threshold=0.6
 distance_=250000 #bp
 type_="quant"
-
 
 ###################################################################################
 mkdir -p $out_dir
