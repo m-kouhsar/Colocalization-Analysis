@@ -27,6 +27,7 @@ print(paste0("     Loci file= ",loci.file))
 print(paste0("     Coloc type= ",type_))
 print(paste0("     Distance for selecting region based on LD (if the region length < 2)= ",distance_))
 print(paste0("     Reference genome binary files name (--bfile option in plink)= ",ref.genome.prefix))
+print(paste0("     LD threshold= ",ld.threshold))
 print(paste0("     Output prefix= ",out.pref))
 cat('\n')
 
@@ -84,7 +85,7 @@ check_ <- check_dataset(GWAS_coloc)
 if(is.null(check_)){
   print("GWAS dataset is OK")
 }
-total.common.snps <- length(QTLs$SNPID[QTLs$SNPID %in% GWAS$SNP])
+total.common.snps <- length(intersect(QTLs$SNPID , GWAS$SNP))
 if(total.common.snps > 0)
 {
   print(paste("Total number of shared SNPs between QTLs and GWAS:",total.common.snps))
@@ -108,18 +109,19 @@ if(total.common.snps > 0)
   
   ld <- NULL
   if(nrow(snp.list) > 0){
-    if(file.exists(paste0(loci.file,".ld"))){
+    ld.file.prefix <- paste0(loci.file,".dist.",distance_,".ld.",ld.threshold)
+    if(file.exists(paste0(ld.file.prefix,".ld"))){
       print("Reading LD file...")
-      ld <- fread(paste0(loci.file,".ld"),stringsAsFactors = F , header = T)
+      ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
     }else{
       print("Calculating LD...")
       write.table(snp.list,file = paste0(loci.file,"lead.snp.list"),row.names = F,col.names = F,quote = F)
-      plink_cmd <- paste("plink --r2 --bfile",ref.genome.prefix , "--ld-snp-list", paste0(loci.file,"lead.snp.list") ,"--ld-window-r2",ld.threshold,"--ld-window-kb",distance_,"--out",loci.file)
+      plink_cmd <- paste("plink --r2 --bfile",ref.genome.prefix , "--ld-snp-list", paste0(loci.file,"lead.snp.list") ,"--ld-window-r2",ld.threshold,"--ld-window-kb",distance_,"--out",ld.file.prefix)
       exit_code <- system(plink_cmd, ignore.stdout=T,wait = T)
       if(!(exit_code>0)){
-        rm <- file.remove(paste0(loci.file,".log"))
-        rm <- file.remove(paste0(loci.file,"lead.snp.list"))
-        ld <- fread(paste0(loci.file,".ld"),stringsAsFactors = F , header = T)
+        rm <- file.remove(paste0(ld.file.prefix,".log"))
+        rm <- file.remove(paste0(ld.file.prefix,"lead.snp.list"))
+        ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
       }else{
         stop(paste("Could not calculate LD using plin"),"\n","plink command:","\n",plink_cmd,"\n","exit code:",exit_code)
       }
@@ -133,6 +135,7 @@ if(total.common.snps > 0)
   
   result <- vector(mode = "list",length = nrow(loci))
   names(result) <- paste0("locus.",loci$ID)
+  flag <- F
   for (i in 1:nrow(loci)) {
     print(paste("Processing locus",i,":",loci$ID[i]))
     log_$nSNPs[i] = 0
@@ -155,11 +158,12 @@ if(total.common.snps > 0)
     log_$locus.length[i] <- loci$END[i] - loci$START[i]
     index <- (GWAS$CHR == loci$CHR[i]) & (as.numeric(GWAS$POS) > loci$START[i]) & (as.numeric(GWAS$POS) < loci$END[i])
     GWAS.loci <- GWAS[index , ]
-    c <- length(QTLs$SNPID[QTLs$SNPID %in% GWAS.loci$SNP])
+    c <- length(intersect(QTLs$SNPID , GWAS.loci$SNP))
     print(paste("Number of shared SNPs between QTLs and",loci$ID[i],"region:",c))
     log_$CommonSNPs.QTL.locus[i] <- c
     log_$UniqSNPs.locus[i] <- length(unique(GWAS.loci$SNP))
     if(c > 0){
+      flag <- T
       GWAS_coloc = list(beta = GWAS.loci$BETA,
                         varbeta = GWAS.loci$SE^2,
                         type = type_,
@@ -198,7 +202,12 @@ if(total.common.snps > 0)
   log_$CommonSNPs.QTL.GWAS[1] <- length(QTLs$SNPID[QTLs$SNPID %in% GWAS$SNP])
   
   write.csv(log_,file=paste0(out.pref,".dist.",distance_,".coloc.",type_,".csv"),row.names=F)
-  save(result,file = paste0(out.pref,".dist.",distance_,".coloc.",type_,".rdat"))
+  if(flag){
+    save(result,file = paste0(out.pref,".dist.",distance_,".coloc.",type_,".rdat"))
+  }else{
+    print("There is no shared SNPs between QTLs and all tested regions in GWAS!")
+  }
+  
 }else{
   print("There is no shared SNPs between QTLs and GWAS!")
 }
