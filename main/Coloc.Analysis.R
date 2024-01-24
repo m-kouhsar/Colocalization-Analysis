@@ -115,12 +115,12 @@ if(total.common.snps > 0)
       ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
     }else{
       print("Calculating LD...")
-      write.table(snp.list,file = paste0(loci.file,"lead.snp.list"),row.names = F,col.names = F,quote = F)
-      plink_cmd <- paste("plink --r2 --bfile",ref.genome.prefix , "--ld-snp-list", paste0(loci.file,"lead.snp.list") ,"--ld-window-r2",ld.threshold,"--ld-window-kb",distance_,"--out",ld.file.prefix)
+      write.table(snp.list,file = paste0(loci.file,".lead.snp.list"),row.names = F,col.names = F,quote = F)
+      plink_cmd <- paste("plink --r2 --bfile",ref.genome.prefix , "--ld-snp-list", paste0(loci.file,".lead.snp.list") ,"--ld-window-r2",ld.threshold,"--ld-window-kb",distance_,"--out",ld.file.prefix)
       exit_code <- system(plink_cmd, ignore.stdout=T,wait = T)
       if(!(exit_code>0)){
         rm <- file.remove(paste0(ld.file.prefix,".log"))
-        rm <- file.remove(paste0(ld.file.prefix,"lead.snp.list"))
+        rm <- file.remove(paste0(loci.file,".lead.snp.list"))
         ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
       }else{
         stop(paste("Could not calculate LD using plin"),"\n","plink command:","\n",plink_cmd,"\n","exit code:",exit_code)
@@ -160,6 +160,7 @@ if(total.common.snps > 0)
     GWAS.loci <- GWAS[index , ]
     c <- length(intersect(QTLs$SNPID , GWAS.loci$SNP))
     print(paste("Number of shared SNPs between QTLs and",loci$ID[i],"region:",c))
+    
     log_$CommonSNPs.QTL.locus[i] <- c
     log_$UniqSNPs.locus[i] <- length(unique(GWAS.loci$SNP))
     if(c > 0){
@@ -190,6 +191,7 @@ if(total.common.snps > 0)
       log_$nSNPs[i] <- length(unique(result.coloc$results$snp))
       
     }
+    cat('\n')
   }
   
   log_ <- log_[order(log_$sum.H3.H4 , decreasing = T),]
@@ -201,9 +203,9 @@ if(total.common.snps > 0)
   log_$UniqSNPs.GWAS[1] <- length(GWAS$SNP)
   log_$CommonSNPs.QTL.GWAS[1] <- length(QTLs$SNPID[QTLs$SNPID %in% GWAS$SNP])
   
-  write.csv(log_,file=paste0(out.pref,".dist.",distance_,".coloc.",type_,".csv"),row.names=F)
+  write.csv(log_,file=paste0(out.pref,".ld.",ld.threshold,".dist.",distance_,".coloc.",type_,".csv"),row.names=F)
   if(flag){
-    save(result,file = paste0(out.pref,".dist.",distance_,".coloc.",type_,".rdat"))
+    save(result,file = paste0(out.pref,".ld.",ld.threshold,".dist.",distance_,".coloc.",type_,".rdat"))
   }else{
     print("There is no shared SNPs between QTLs and all tested regions in GWAS!")
   }
