@@ -156,6 +156,7 @@ if(total.common.snps > 0)
     index <- (GWAS$CHR == loci$CHR[i]) & (as.numeric(GWAS$POS) > loci$START[i]) & (as.numeric(GWAS$POS) < loci$END[i])
     GWAS.loci <- GWAS[index , ]
     c <- length(QTLs$SNPID[QTLs$SNPID %in% GWAS.loci$SNP])
+    print(paste("Number of shared SNPs between QTLs and",loci$ID[i],"region:",c))
     log_$CommonSNPs.QTL.locus[i] <- c
     log_$UniqSNPs.locus[i] <- length(unique(GWAS.loci$SNP))
     if(c > 0){
@@ -177,6 +178,7 @@ if(total.common.snps > 0)
       log_$PP.H3.abf[i] = temp["PP.H3.abf",1]
       log_$PP.H4.abf[i] = temp["PP.H4.abf",1]
       log_$sum.H3.H4[i] = temp["PP.H3.abf",1] + temp["PP.H4.abf",1]
+      print(paste("Sum of H3 and H4 probability related to",loci$ID[i],"region:",log_$sum.H3.H4[i]))
       Genes = paste(unique(result.QTL$GENE),collapse=',')
       log_$Genes[i] = Genes
       log_$nGenes[i] = length(unique(result.QTL$GENE))
