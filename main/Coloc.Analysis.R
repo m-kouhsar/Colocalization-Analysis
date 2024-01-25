@@ -151,6 +151,7 @@ if(total.common.snps > 0)
   result <- vector(mode = "list",length = nrow(loci))
   names(result) <- paste0("locus.",loci$ID)
   flag <- F
+  cat('\n')
   for (i in 1:nrow(loci)) {
     print(paste("Processing locus",i,":",loci$ID[i]))
     log_$nSNPs[i] = 0
