@@ -8,25 +8,30 @@
 #SBATCH --ntasks-per-node=16 # specify number of processors.
 #SBATCH --mail-type=END # send email at job completion
 #SBATCH --mail-user=m.kouhsar@exeter.ac.uk # email address
-#SBATCH --array=0-2  ## Number of lines in coloc.inputs.txt file
+#SBATCH --array=0
 
 module load R
 
-ScriptDir=./main
+ScriptDir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Scripts/Coloc
 
-SumStat_dir=./SamStats
-loci_dir=./Regions
-qtl_dir=./QTLs
+SumStat_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/SumStat
+loci_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/SumStat
+qtl_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024/AllmiRNAs
 
-out_dir=./Outputs
+out_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024/AllmiRNAs/results
 
-ref_genome_prefix=./Ref/g1000_eur/g1000_eur_rsid
+ref_genome_prefix=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/Scripts/lava/g1000_eur/g1000_eur_rsid
 
-input_list=./coloc.inputs.txt
+# Ref genome will use to calculate LD for the lead SNPs in loci file. So, the SNP IDs in Ref genome must be the same as lead SNPs
 
-ld_threshold=0.6
-distance_=250000 #bp
-type_="quant"
+input_list=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Scripts/Coloc/coloc.inputs.txt
+
+
+distance_=1000 #kb
+use_ld=no
+ld_threshold=0
+type_="cc" # quant for quantitative trait and cc for binary
+
 
 ###################################################################################
 mkdir -p $out_dir
@@ -37,8 +42,8 @@ while read -r line
 do
 	IFS=',' read -r -a array <<< "$line"
 	gwas+=(${array[0]})
-	qtl+=(${array[1]})
-	loci+=(${array[2]})
+	loci+=(${array[1]})
+	qtl+=(${array[2]})
 	((dupp[$loci]++))
 done < $input_list
 
@@ -54,7 +59,7 @@ then
   loci_file=${out_dir}/${loci[$SLURM_ARRAY_TASK_ID]%".csv"}.${SLURM_ARRAY_TASK_ID}".csv"
 fi
 
-Rscript ${ScriptDir}/Coloc.Analysis.R   ${qtl_dir}/${qtl[$SLURM_ARRAY_TASK_ID]}  ${SumStat_dir}/${gwas[$SLURM_ARRAY_TASK_ID]} $loci_file $ref_genome_prefix $distance_ $type_ $ld_threshold ${out_dir}/$out_pref
+Rscript ${ScriptDir}/Coloc.Analysis.V1.R   ${qtl_dir}/${qtl[$SLURM_ARRAY_TASK_ID]}  ${SumStat_dir}/${gwas[$SLURM_ARRAY_TASK_ID]} $loci_file $type_ $distance_ $use_ld $ld_threshold $ref_genome_prefix ${out_dir}/$out_pref  
 
 if [  ${dupp[${loci[$SLURM_ARRAY_TASK_ID]}]} -gt 1 ]
 then
