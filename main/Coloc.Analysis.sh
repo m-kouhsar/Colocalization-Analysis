@@ -12,19 +12,19 @@
 
 module load R
 
-ScriptDir=./main
+ScriptDir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Scripts/Coloc
 
-SumStat_dir=./SumStat
-loci_dir=./Regions
-qtl_dir=./QTLs
+SumStat_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/SumStat
+loci_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/SumStat
+qtl_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024/AllmiRNAs
 
-out_dir=./Results
+out_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024/AllmiRNAs/results
 
-ref_genome_prefix=./Ref/g1000_ref
+ref_genome_prefix=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/Scripts/lava/g1000_eur/g1000_eur_rsid
 
 # Ref genome will use to calculate LD for the lead SNPs in loci file. So, the SNP IDs in Ref genome must be the same as lead SNPs
 
-input_list=./coloc.inputs.txt
+input_list=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Scripts/Coloc/coloc.inputs.txt
 
 
 distance_=1000 #kb
