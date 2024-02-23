@@ -13,24 +13,18 @@
 ### print start date and time
 echo Job started on:
 date -u
-
-set -e
-####### 
-
-### NOTE: Do not store confidenial information in this file use the config file
-
 ######
-SCRIPTDIR=/lustre/projects/Research_Project-191391/Morteza/coloc.Ehsan/scripts
-cpg_snp_pairs=/lustre/projects/Research_Project-191391/Morteza/coloc.Ehsan/inputs/cit/SNPs.CpGs.csv
-genotype_data=/lustre/projects/Research_Project-191391/Morteza/coloc.Ehsan/inputs/cit/EMIF_AD_imputed.ClumpedSNPs.raw
-methylation_data=/lustre/projects/Research_Project-191391/Morteza/coloc.Ehsan/inputs/cit/EMIF_AD_Beta.SelectedCpGs.rds
-phenotype_file=/lustre/projects/Research_Project-191391/Morteza/coloc.Ehsan/inputs/cit/EMIF_AD_Pheno.csv
-trait=Central_CSF_YKL40
-is_binary_trait=0            #1 means True
-covariates_num=NA
-covariates_fact=NA
+SCRIPTDIR=./main
+cpg_snp_pairs=./SNPs.CpGs.csv
+genotype_data=./Genotype.raw
+methylation_data=./Methylation.Beta.Values.rds
+phenotype_file=./Pheno.csv
+trait=AD
+is_binary_trait=1            #1 means True
+covariates_num=Age,BMI
+covariates_fact=Sex,BraakStage
 n_permutation=500
-out_prefix=/lustre/projects/Research_Project-191391/Morteza/coloc.Ehsan/results/EMIF_AD
+out_prefix=./Results.CIT
 
 
 module load R
