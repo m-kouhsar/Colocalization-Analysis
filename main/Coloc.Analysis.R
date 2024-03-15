@@ -122,7 +122,7 @@ if(total.common.snps > 0)
         rm <- file.remove(paste0(loci.file,".lead.snp.list"))
         ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
       }else{
-        stop(paste("Could not calculate LD using plin"),"\n","plink command:","\n",plink_cmd,"\n","exit code:",exit_code)
+        stop(paste("Could not calculate LD using plink"),"\n","plink command:","\n",plink_cmd,"\n","exit code:",exit_code)
       }
     }
   }
