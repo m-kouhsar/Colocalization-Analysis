@@ -12,19 +12,19 @@
 
 module load R
 
-ScriptDir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Scripts/Coloc
+ScriptDir=./main
 
-SumStat_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/SumStat
-loci_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/SumStat
-qtl_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024/AllmiRNAs
+SumStat_dir=./SumStat
+loci_dir=./SumStat
+qtl_dir=./QTL
 
-out_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/eQTL.Jan2024/AllmiRNAs/results
+out_dir=./results
 
-ref_genome_prefix=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/Scripts/lava/g1000_eur/g1000_eur_rsid
+ref_genome_prefix=./g1000_eur_rsid
 
 # Ref genome will use to calculate LD for the lead SNPs in loci file. So, the SNP IDs in Ref genome must be the same as lead SNPs
 
-input_list=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Scripts/Coloc/coloc.inputs.txt
+input_list=./coloc.inputs.txt
 
 
 distance_=1000 #kb
@@ -59,7 +59,7 @@ then
   	loci_file=${out_dir}/${loci[$SLURM_ARRAY_TASK_ID]%".csv"}.${SLURM_ARRAY_TASK_ID}".csv"
 fi
 
-Rscript ${ScriptDir}/Coloc.Analysis.V1.R   ${qtl_dir}/${qtl[$SLURM_ARRAY_TASK_ID]}  ${SumStat_dir}/${gwas[$SLURM_ARRAY_TASK_ID]} $loci_file $type_ $distance_ $use_ld $ld_threshold $ref_genome_prefix ${out_dir}/$out_pref  
+Rscript ${ScriptDir}/Coloc.Analysis.R   ${qtl_dir}/${qtl[$SLURM_ARRAY_TASK_ID]}  ${SumStat_dir}/${gwas[$SLURM_ARRAY_TASK_ID]} $loci_file $type_ $distance_ $use_ld $ld_threshold $ref_genome_prefix ${out_dir}/$out_pref  
 
 if [  ${dupp[${loci[$SLURM_ARRAY_TASK_ID]}]} -gt 1 ]
 then
