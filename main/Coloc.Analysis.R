@@ -107,7 +107,7 @@ if(total.common.snps > 0){
       loci$ID <- loci$SNP
     }
   }
-  loci$length <- loci$START - loci$END
+  loci$length <-  loci$END - loci$START
   if(any(loci$length < 2)){
     index <- which(loci$length < 2)
     if(use.ld){
