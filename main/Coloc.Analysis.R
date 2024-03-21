@@ -92,8 +92,7 @@ if(is.null(check_)){
   print("GWAS dataset is OK")
 }
 total.common.snps <- length(intersect(QTLs$SNP , GWAS$SNP))
-if(total.common.snps > 0)
-{
+if(total.common.snps > 0){
   print(paste("Total number of shared SNPs between QTLs and GWAS:",total.common.snps))
   print("Reading loci file...")
   loci <- vroom(file = loci.file,col_types = c(.default = "c"),num_threads=16)
@@ -108,38 +107,38 @@ if(total.common.snps > 0)
       loci$ID <- loci$SNP
     }
   }
-  if(use.ld){
-    ld.file.prefix <- paste0(loci.file,".dist.",distance_,".ld.",ld.threshold)
-    if(file.exists(paste0(ld.file.prefix,".ld"))){
-      print("Reading LD file...")
-      ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
-    }else{
-      print("Calculating LD...")
-      plink_cmd <- paste("plink --r2 --bfile",ref.genome.prefix , "--ld-snps", paste(loci$SNP , collapse = ",") ,"--ld-window-r2",ld.threshold,"--ld-window-kb",distance_,"--out",ld.file.prefix)
-      exit_code <- system(plink_cmd, ignore.stdout=T,wait = T)
-      if(!(exit_code>0)){
-        rm <- file.remove(paste0(ld.file.prefix,".log"))
-        rm <- file.remove(paste0(loci.file,".lead.snp.list"))
+  loci$length <- loci$START - loci$END
+  if(any(loci$length < 2)){
+    index <- which(loci$length < 2)
+    if(use.ld){
+      if(!("SNP" %in% colnames(loci)))
+        stop("SNP column not fond in loci file!")
+      
+      ld.file.prefix <- paste0(loci.file,".dist.",distance_,".ld.",ld.threshold)
+      if(file.exists(paste0(ld.file.prefix,".ld"))){
+        print("Reading LD file...")
         ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
       }else{
-        stop(paste("Could not calculate LD using plink"),"\n","plink command:","\n",plink_cmd,"\n","exit code:",exit_code)
+        print("Calculating LD...")
+        plink_cmd <- paste("plink --r2 --bfile",ref.genome.prefix , "--ld-snps", paste(loci$SNP[index] , collapse = ",") ,"--ld-window-r2",ld.threshold,"--ld-window-kb",distance_,"--out",ld.file.prefix)
+        exit_code <- system(plink_cmd, ignore.stdout=T,wait = T)
+        if(!(exit_code>0)){
+          rm <- file.remove(paste0(ld.file.prefix,".log"))
+          ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
+        }else{
+          stop(paste("Could not calculate LD using plin"),"\n","plink command:","\n",plink_cmd,"\n","exit code:",exit_code)
+        }
       }
-    }
-  }
-  loci$START <- as.numeric(loci$START)
-  loci$END <- as.numeric(loci$END)
-  for (i in 1:nrow(loci)) {
-    if((loci$END[i] - loci$START[i]) < 2){
-      if(use.ld){
+      for (i in 1:length(index)) {
         if(loci$SNP[i] %in% ld$SNP_A){
           ld1 <- ld[ld$SNP_A==loci$SNP[i],]
           loci$START[i] <- min(ld1$BP_B)
           loci$END[i] <- max(ld1$BP_B)
         }
-      }else{
-        loci$START[i] <- loci$START[i] - (distance_*1000)
-        loci$END[i] <- loci$END[i] + (distance_*1000)
       }
+    }else{
+      loci$START[index] <- loci$START[index] - (distance_*1000)
+      loci$END[index] <- loci$END[index] + (distance_*1000)
     }
   }
   
