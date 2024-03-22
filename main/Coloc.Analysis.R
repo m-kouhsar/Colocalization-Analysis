@@ -1,4 +1,3 @@
-
 args<-commandArgs(TRUE)
 
 QTL.file <- args[1]
