@@ -11,26 +11,33 @@ ld.threshold <- as.numeric(args[7])      ## LD threshold for defining regions (i
 ref.genome.prefix <- args[8]
 out.pref <- args[9]
 #################################################################
-print("Input arguments:")
-print(paste0("     QTL file= ",QTL.file))
-print(paste0("     GWAS Summary statistic file= ",GWAS.file))
-print(paste0("     Loci file= ",loci.file))
-print(paste0("     Coloc type= ",type_))
-print(paste0("     Distance for selecting region based on LD (if the region length < 2)= ",distance_, " KB"))
-print(paste0("     Using LD to define regions for lead SNPs? ",ifelse(use.ld,"Yes","No")))
-print(paste0("     Reference genome binary files name (--bfile option in plink)= ",ref.genome.prefix))
-print(paste0("     LD threshold= ",ld.threshold))
-print(paste0("     Output prefix= ",out.pref))
+cat("Input arguments:\n")
+cat("     QTL directory= ",dirname(QTL.file),"\n")
+cat("     GWAS directory= ",dirname(GWAS.file),"\n")
+cat("     Loci directory= ",dirname(loci.file),"\n")
+cat("\n")
+cat("     QTL file= ",basename(QTL.file),"\n")
+cat("     GWAS Summary statistic file= ",basename(GWAS.file),"\n")
+cat("     Loci file= ",basename(loci.file),"\n")
+cat("\n")
+cat("     Coloc type= ",type_,"\n")
+cat("     Distance for selecting region based on LD (if the region length < 2)= ",distance_, " KB\n")
+cat("     Using LD to define regions for lead SNPs? ",ifelse(use.ld,"Yes","No"),"\n")
+cat("     LD threshold= ",ld.threshold,"\n")
 cat('\n')
-
-print("Loading libraries...")
+cat("     Reference genome binary files name (--bfile option in plink)= ",ref.genome.prefix,"\n")
+cat("     Output prefix= ",out.pref,"\n")
+cat('\n')
+cat("#############################################################################################\n")
+cat("\n")
+cat("Loading libraries...\n")
 suppressMessages(library(coloc))
 suppressMessages(library(stringr))
 suppressMessages(library(vroom))
 suppressMessages(library(data.table))
 options(datatable.fread.datatable=FALSE)
 
-print("Reading QTL file...")
+cat("Reading QTL file...\n")
 QTLs <- vroom(QTL.file, col_types = c(.default = "c"),num_threads=16)
 QTLs <- as.data.frame(QTLs)
 names(QTLs) <- toupper(names(QTLs))
@@ -38,10 +45,10 @@ names(QTLs) <- toupper(names(QTLs))
 QTLs.col <- c("SNP","MAF","SE","BETA","N")
 if(!all(QTLs.col %in% colnames(QTLs))){
    missed.col <- QTLs.col[which(!(QTLs.col %in% colnames(QTLs)))]
-   stop(paste("The following columns are missed in QTL data: ",paste(missed.col , collapse = ",")))
+   stop("The following columns are missed in QTL data: ",paste(missed.col , collapse = ","))
 }
 
-print("Removing dupplicated SNPs from QTLs...")
+cat("Removing dupplicated SNPs from QTLs...\n")
 QTLs <- QTLs[!duplicated(QTLs$SNP),] 
 QTLs$MAF <- as.numeric(QTLs$MAF)
 QTLs$SE <- as.numeric(QTLs$SE)
@@ -58,10 +65,10 @@ QTLs_coloc = list(beta = as.numeric(QTLs$BETA), # Beta/expression values for all
                   N = QTLs$N) # Sample size of the associated study.In general will be the max of available sample size values
 check_ <- check_dataset(QTLs_coloc) # That functions returns NULL if everything is OK for the coloc analysis
 if(is.null(check_)){
-  print("QTL dataset is OK")
+  cat("QTL dataset is OK\n")
 }
 
-print("Reading GWAS summary statistics...")
+cat("Reading GWAS summary statistics...\n")
 GWAS <- vroom(file=GWAS.file,col_types = c(.default = "c"),num_threads=16)
 GWAS <- as.data.frame(GWAS)
 names(GWAS) <- toupper(names(GWAS))
@@ -69,10 +76,10 @@ names(GWAS) <- toupper(names(GWAS))
 GWAS.col <- c("SNP","MAF","SE","BETA","N")
 if(!all(GWAS.col %in% colnames(GWAS))){
   missed.col <- GWAS.col[which(!(GWAS.col %in% colnames(GWAS)))]
-  stop(paste("The following columns are missed in QTL data: ",paste(missed.col , collapse = ",")))
+  stop(paste("The following columns are missed in GWAS data: ",paste(missed.col , collapse = ",")))
 }
 
-print("Removing dupplicated SNPs from GWAS summary statistics...")
+cat("Removing dupplicated SNPs from GWAS summary statistics...\n")
 GWAS <- GWAS[!duplicated(GWAS$SNP),]
 GWAS$MAF <- as.numeric(GWAS$MAF)
 GWAS$SE <- as.numeric(GWAS$SE)
@@ -89,12 +96,12 @@ GWAS_coloc = list(beta = GWAS$BETA,
                   N = GWAS$N)
 check_ <- check_dataset(GWAS_coloc)
 if(is.null(check_)){
-  print("GWAS dataset is OK")
+  cat("GWAS dataset is OK\n")
 }
 total.common.snps <- length(intersect(QTLs$SNP , GWAS$SNP))
 if(total.common.snps > 0){
-  print(paste("Total number of shared SNPs between QTLs and GWAS:",total.common.snps))
-  print("Reading loci file...")
+  cat("Total number of shared SNPs between QTLs and GWAS: ",total.common.snps,"\n")
+  cat("Reading loci file...\n")
   loci <- vroom(file = loci.file,col_types = c(.default = "c"),num_threads=16)
   loci <- as.data.frame(loci)
   names(loci) <- toupper(names(loci))
@@ -111,22 +118,28 @@ if(total.common.snps > 0){
   if(any(loci$length < 2)){
     index <- which(loci$length < 2)
     if(use.ld){
-      if(!("SNP" %in% colnames(loci)))
-        stop("SNP column not fond in loci file!")
-      
+      if(!("SNP" %in% colnames(loci))){
+        if(!("RSID" %in% colnames(loci))){
+          stop("SNP or RSID column not fond in loci file!")
+        } else {
+          loci$SNP <- loci$RSID
+        }
+      }
       ld.file.prefix <- paste0(loci.file,".dist.",distance_,".ld.",ld.threshold)
       if(file.exists(paste0(ld.file.prefix,".ld"))){
-        print("Reading LD file...")
+        cat("Reading LD file...\n")
         ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
       }else{
-        print("Calculating LD...")
-        plink_cmd <- paste("plink --r2 --bfile",ref.genome.prefix , "--ld-snps", paste(loci$SNP[index] , collapse = ",") ,"--ld-window-r2",ld.threshold,"--ld-window-kb",distance_,"--out",ld.file.prefix)
+        cat("Calculating LD...\n")
+        write.table(loci$SNP[index],file =paste0(ld.file.prefix,".SNPList.txt"),col.names = F , row.names = F,quote = F )
+        plink_cmd <- paste("plink --r2 --bfile",ref.genome.prefix , "--ld-snp-list", paste0(ld.file.prefix,".SNPList.txt") ,"--ld-window-r2",ld.threshold,"--ld-window-kb",distance_,"--out",ld.file.prefix)
         exit_code <- system(plink_cmd, ignore.stdout=T,wait = T)
         if(!(exit_code>0)){
           rm <- file.remove(paste0(ld.file.prefix,".log"))
           ld <- fread(paste0(ld.file.prefix,".ld"),stringsAsFactors = F , header = T)
         }else{
-          stop(paste("Could not calculate LD using plin"),"\n","plink command:","\n",plink_cmd,"\n","exit code:",exit_code)
+          rm <- file.remove(paste0(ld.file.prefix,".log"))
+          stop("Could not calculate LD using plin!","\n","plink command:","\n",plink_cmd,"\n","exit code:",exit_code)
         }
       }
       for (i in 1:length(index)) {
@@ -152,7 +165,7 @@ if(total.common.snps > 0){
   flag <- F
   cat('\n')
   for (i in 1:nrow(loci)) {
-    print(paste("Processing locus",i,":",loci$ID[i]))
+    cat("Processing locus ",i,": ",loci$ID[i],"\n")
     log_$nSNPs[i] = 0
     log_$PP.H0.abf[i] = 0
     log_$PP.H1.abf[i] = 0
@@ -167,10 +180,10 @@ if(total.common.snps > 0){
     index <- (GWAS$CHR == loci$CHR[i]) & (as.numeric(GWAS$POS) > loci$START[i]) & (as.numeric(GWAS$POS) < loci$END[i])
     GWAS.loci <- GWAS[index , ]
 	log_$UniqSNPs.locus[i] <- length(unique(GWAS.loci$SNP))
-	print(paste("Region",loci$ID[i],"length:",log_$locus.length[i]))
-	print(paste("Number of unique SNPs in",loci$ID[i],"region:",log_$UniqSNPs.locus[i]))
+	cat("Region ",loci$ID[i]," length: ",log_$locus.length[i],"\n")
+	cat("Number of unique SNPs in ",loci$ID[i]," region: ",log_$UniqSNPs.locus[i],"\n")
     c <- length(intersect(QTLs$SNP , GWAS.loci$SNP))
-    print(paste("Number of shared SNPs between QTLs and",loci$ID[i],"region:",c))
+    cat("Number of shared SNPs between QTLs and ",loci$ID[i]," region: ",c,"\n")
     log_$CommonSNPs.QTL.locus[i] <- c
     if(c > 0){
       flag <- T
@@ -192,7 +205,7 @@ if(total.common.snps > 0){
       log_$PP.H3.abf[i] = temp["PP.H3.abf",1]
       log_$PP.H4.abf[i] = temp["PP.H4.abf",1]
       log_$sum.H3.H4[i] = temp["PP.H3.abf",1] + temp["PP.H4.abf",1]
-      print(paste("Sum of H3 and H4 probability related to",loci$ID[i],"region:",log_$sum.H3.H4[i]))
+      cat("Sum of H3 and H4 probability related to ",loci$ID[i]," region: ",log_$sum.H3.H4[i],"\n")
       Genes = paste(unique(result.QTL$GENE),collapse=',')
       log_$Genes[i] = Genes
       log_$nGenes[i] = length(unique(result.QTL$GENE))
@@ -212,9 +225,9 @@ if(total.common.snps > 0){
   log_$UniqSNPs.GWAS[1] <- length(GWAS$SNP)
   log_$CommonSNPs.QTL.GWAS[1] <- length(QTLs$SNP[QTLs$SNP %in% GWAS$SNP])
   
-  write.csv(log_,file=paste0(out.pref,".ld.",ld.threshold,".dist.",distance_,".coloc.",type_,".csv"),row.names=F)
+  write.csv(log_,file=paste0(out.pref,".csv"),row.names=F)
   if(flag){
-    save(result,file = paste0(out.pref,".ld.",ld.threshold,".dist.",distance_,".coloc.",type_,".rdat"))
+    save(result,file = paste0(out.pref,".rdat"))
   }else{
     warning("There is no shared SNPs between QTLs and all tested regions in GWAS!",call. = F)
   }
