@@ -1,3 +1,4 @@
+
 args<-commandArgs(TRUE)
 
 QTL.file <- args[1]
@@ -9,8 +10,7 @@ use.ld <- ifelse(tolower(args[6])=="yes",T,F)
 ld.threshold <- as.numeric(args[7])      ## LD threshold for defining regions (it should be between 0 and 1)
 ref.genome.prefix <- args[8]
 out.pref <- args[9]
-
-log <- file(paste0(out.pref , ".log.txt") , open="wt")
+log <- file(paste0(out.pref , ".log.txt") , open = "wt")
 sink(file = log , type = "output")
 sink(file = log , type = "message")
 #################################################################
@@ -234,5 +234,9 @@ if(total.common.snps > 0){
   }else{
     warning("There is no shared SNPs between QTLs and all tested regions in GWAS!",call. = F)
   }
+  
+}else{
+  warning("There is no shared SNPs between QTLs and GWAS!",call. = F)
+}
 sink()
 sink()
