@@ -1,3 +1,0 @@
-AD_GCST90027158_buildGRCh37_sumstat.txt,AD-2022-Regions-hg19.liftover.csv,QTL1.formatted.csv
-AD_GCST90027158_buildGRCh37_sumstat.txt,AD-2022-Regions-hg19.liftover.csv,QTL2.formatted.csv
-AD_GCST90027158_buildGRCh37_sumstat.txt,AD-2022-Regions-hg19.liftover.csv,Qtl3.formatted.csv
