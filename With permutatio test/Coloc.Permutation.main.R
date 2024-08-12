@@ -265,12 +265,12 @@ if(total.common.snps > 0){
         permut.results <- append(permut.results,list(loci.permut))
         names(permut.results)[length(permut.results)] <- loci$ID[i]
         
-        log_$H0.Pvalue[i] <- 1-sum(0.9 > loci.permut$PP.H0.abf )/nrow(loci.permut)
-        log_$H1.Pvalue[i] <- 1-sum(0.9 > loci.permut$PP.H1.abf )/nrow(loci.permut)
-        log_$H2.Pvalue[i] <- 1-sum(0.9 > loci.permut$PP.H2.abf )/nrow(loci.permut)
-        log_$H3.Pvalue[i] <- 1-sum(0.9 > loci.permut$PP.H3.abf )/nrow(loci.permut)
-        log_$H4.Pvalue[i] <- 1-sum(0.9 > loci.permut$PP.H4.abf )/nrow(loci.permut)
-        log_$Sum.H3.H4.Pvalue[i] <- 1-sum(0.9 > loci.permut$sum.H3.H4 )/nrow(loci.permut)
+        log_$H0.Pvalue[i] <- 1-sum(p.threshold > loci.permut$PP.H0.abf )/nrow(loci.permut)
+        log_$H1.Pvalue[i] <- 1-sum(p.threshold > loci.permut$PP.H1.abf )/nrow(loci.permut)
+        log_$H2.Pvalue[i] <- 1-sum(p.threshold > loci.permut$PP.H2.abf )/nrow(loci.permut)
+        log_$H3.Pvalue[i] <- 1-sum(p.threshold > loci.permut$PP.H3.abf )/nrow(loci.permut)
+        log_$H4.Pvalue[i] <- 1-sum(p.threshold > loci.permut$PP.H4.abf )/nrow(loci.permut)
+        log_$Sum.H3.H4.Pvalue[i] <- 1-sum(p.threshold > loci.permut$sum.H3.H4 )/nrow(loci.permut)
         cat("H0 P-value: ",log_$H0.Pvalue[i],"\n")
         cat("H1 P-value: ",log_$H1.Pvalue[i],"\n")
         cat("H2 P-value: ",log_$H2.Pvalue[i],"\n")
