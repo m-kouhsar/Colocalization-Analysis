@@ -1,19 +1,19 @@
 
 args<-commandArgs(TRUE)
 
-QTL.file <- args[1]
-GWAS.file <- args[2]
-loci.file <- args[3]
-type_QTL <- args[4]                         ## "quant" for quantitative traits and "cc" for binary traits
-type_GWAS <- args[4]                         ## "quant" for quantitative traits and "cc" for binary traits
-distance <- as.numeric(args[5])          ## distance in bp to define regions based on LD (it will be ignored if length locus > 2)
-LD <- ifelse(tolower(args[6])=="yes",T,F)
-LD.threshold <- as.numeric(args[7])      ## LD threshold for defining regions (it should be between 0 and 1)
-ref.genome.prefix <- args[8]
-use.permut <- ifelse(tolower(args[9])=="yes",T,F)
-n.permut <- as.numeric(args[10])
-p.threshold <- as.numeric(args[11])
-out.pref <- args[12]
+QTL.file <- trimws(args[1])
+GWAS.file <- trimws(args[2])
+loci.file <- trimws(args[3])
+type_QTL <- trimws(args[4])                         ## "quant" for quantitative traits and "cc" for binary traits
+type_GWAS <- trimws(args[5])                         ## "quant" for quantitative traits and "cc" for binary traits
+distance <- as.numeric(trimws(args[6]))          ## distance in bp to define regions based on LD (it will be ignored if length locus > 2)
+LD <- ifelse(tolower(trimws(args[7]))=="yes",T,F)
+LD.threshold <- as.numeric(trimws(args[8]))      ## LD threshold for defining regions (it should be between 0 and 1)
+ref.genome.prefix <- trimws(args[9])
+use.permut <- ifelse(tolower(trimws(args[10]))=="yes",T,F)
+n.permut <- as.numeric(trimws(args[11]))
+p.threshold <- as.numeric(trimws(args[12]))
+out.pref <- trimws(args[13])
 log <- file(paste0(out.pref , ".log.txt") , open = "wt")
 sink(file = log , type = "output")
 sink(file = log , type = "message")
