@@ -4,7 +4,8 @@ args<-commandArgs(TRUE)
 QTL.file <- args[1]
 GWAS.file <- args[2]
 loci.file <- args[3]
-type_ <- args[4]                         ## "quant" for quantitative traits and "cc" for binary traits
+type_QTL <- args[4]                         ## "quant" for quantitative traits and "cc" for binary traits
+type_GWAS <- args[4]                         ## "quant" for quantitative traits and "cc" for binary traits
 distance <- as.numeric(args[5])          ## distance in bp to define regions based on LD (it will be ignored if length locus > 2)
 LD <- ifelse(tolower(args[6])=="yes",T,F)
 LD.threshold <- as.numeric(args[7])      ## LD threshold for defining regions (it should be between 0 and 1)
