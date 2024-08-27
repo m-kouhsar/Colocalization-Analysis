@@ -168,7 +168,7 @@ if(total.common.snps > 0){
     }
   }
   
-  log_ <- as.data.frame(matrix(data = NA,nrow = nrow(loci),ncol = 30))
+  log_ <- as.data.frame(matrix(data = NA,nrow = nrow(loci),ncol = 31))
   names(log_) <- c("QTL.Type","GWAS.Type","LD.threshold","Distance","UniqGene.QTL","UniqSNPs.QTL","UniqSNPs.GWAS","CommonSNPs.QTL.GWAS",
                    "locus.Id","locus.Chr","locus.Start","locus.End","locus.length","UniqSNPs.locus","CommonSNPs.QTL.locus","PP.H0.abf","PP.H1.abf",
                    "PP.H2.abf","PP.H3.abf","PP.H4.abf","sum.H3.H4","SNPs","nSNPs","Genes","nGenes","H0.Pvalue","H1.Pvalue","H2.Pvalue","H3.Pvalue","H4.Pvalue","Sum.H3.H4.Pvalue")
