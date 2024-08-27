@@ -30,7 +30,8 @@ distance_=250 #kb
 use_ld=yes
 ld_threshold=0.6
 coloc_P_threshold=0.9 #To Save time, for any results (H0, H1, H2,H3,H4, and H3+H4) larger than this threshold the permutation test will run
-type_="cc" # 'quant' for quantitative trait and 'cc' for binary
+type_QTL="cc" # 'quant' for quantitative trait and 'cc' for binary
+type_GWAS="cc" # 'quant' for quantitative trait and 'cc' for binary
 use_permut=yes 
 n_permut=1000
 
@@ -51,9 +52,9 @@ done < $input_list
 
 if [ $use_ld = "yes" ]
 then
-  out_prefix="${out_prefix}.${OutID[$SLURM_ARRAY_TASK_ID]}.Coloc.${type_}.dist.${distance_}.ld.${ld_threshold}"
+  out_prefix="${out_prefix}.${OutID[$SLURM_ARRAY_TASK_ID]}.QTL.${type_QTL}.GWAS.${type_GWAS}.dist.${distance_}.ld.${ld_threshold}.Coloc"
 else
-  out_prefix="${out_prefix}.${OutID[$SLURM_ARRAY_TASK_ID]}.Coloc.${type_}.dist.${distance_}"
+  out_prefix="${out_prefix}.${OutID[$SLURM_ARRAY_TASK_ID]}.QTL.${type_QTL}.GWAS.${type_GWAS}.dist.${distance_}.Coloc"
 fi
 
 if [ $use_permut = "yes" ]
