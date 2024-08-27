@@ -73,7 +73,7 @@ QTLs <- QTLs[QTLs$MAF>0,]
 QTLs <- QTLs[QTLs$MAF<1,]
 QTLs_coloc = list(beta = as.numeric(QTLs$BETA), # Beta/expression values for allele1 of each CPG/gene
                   varbeta = QTLs$SE^2, # Variance of each beta value
-                  type = type_, # quant for quantitative or cc for binary outcome
+                  type = type_QTL, # quant for quantitative or cc for binary outcome
                   snp = QTLs$SNP, # IDs of QTLs. MUST be the same as in the GWAS dataset
                   MAF = QTLs$MAF, # Frequency of allele1 of each SNP
                   N = QTLs$N) # Sample size of the associated study.In general will be the max of available sample size values
@@ -105,7 +105,7 @@ GWAS <- GWAS[GWAS$MAF>0,]
 GWAS <- GWAS[GWAS$MAF<1,]
 GWAS_coloc = list(beta = GWAS$BETA, 
                   varbeta = GWAS$SE^2,
-                  type = type_,
+                  type = type_GWAS,
                   snp = GWAS$SNP, 
                   MAF = GWAS$MAF,
                   N = GWAS$N)
@@ -169,7 +169,7 @@ if(total.common.snps > 0){
   }
   
   log_ <- as.data.frame(matrix(data = NA,nrow = nrow(loci),ncol = 30))
-  names(log_) <- c("Coloc.Type","LD.threshold","Distance","UniqGene.QTL","UniqSNPs.QTL","UniqSNPs.GWAS","CommonSNPs.QTL.GWAS",
+  names(log_) <- c("QTL.Type","GWAS.Type","LD.threshold","Distance","UniqGene.QTL","UniqSNPs.QTL","UniqSNPs.GWAS","CommonSNPs.QTL.GWAS",
                    "locus.Id","locus.Chr","locus.Start","locus.End","locus.length","UniqSNPs.locus","CommonSNPs.QTL.locus","PP.H0.abf","PP.H1.abf",
                    "PP.H2.abf","PP.H3.abf","PP.H4.abf","sum.H3.H4","SNPs","nSNPs","Genes","nGenes","H0.Pvalue","H1.Pvalue","H2.Pvalue","H3.Pvalue","H4.Pvalue","Sum.H3.H4.Pvalue")
   
@@ -205,7 +205,7 @@ if(total.common.snps > 0){
       flag <- T
       GWAS_coloc = list(beta = GWAS.loci$BETA,
                         varbeta = GWAS.loci$SE^2,
-                        type = type_,
+                        type = type_GWAS,
                         snp = GWAS.loci$SNP, 
                         MAF = GWAS.loci$MAF,
                         N = GWAS.loci$N)
@@ -250,7 +250,7 @@ if(total.common.snps > 0){
           if(c > 0){
             GWAS_coloc = list(beta = GWAS.loci$BETA,
                               varbeta = GWAS.loci$SE^2,
-                              type = type_,
+                              type = type_GWAS,
                               snp = GWAS.loci$SNP, 
                               MAF = GWAS.loci$MAF,
                               N = GWAS.loci$N)
@@ -286,7 +286,8 @@ if(total.common.snps > 0){
   }
   
   log_ <- log_[order(log_$sum.H3.H4 , decreasing = T),]
-  log_$Coloc.Type[1] <- type_
+  log_$QTL.Type[1] <- type_QTL
+  log_$GWAS.Type[1] <- type_GWAS
   log_$LD.threshold[1] <- LD.threshold
   log_$Distance[1] <- distance
   log_$UniqGene.QTL[1] <- length(unique(QTLs$GENE))
