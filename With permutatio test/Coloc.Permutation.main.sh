@@ -70,7 +70,7 @@ qtl_file=${qtl_dir}/${qtl[$SLURM_ARRAY_TASK_ID]}
 
 
 
-Rscript ${ScriptDir}/Coloc.Permutation.main.R   $qtl_file  $gwas_file $loci_file $type_ $distance_ $use_ld $ld_threshold $ref_genome_prefix $use_permut $n_permut $coloc_P_threshold $out_prefix  
+Rscript ${ScriptDir}/Coloc.Permutation.main.R   $qtl_file  $gwas_file $loci_file $type_QTL $type_GWAS $distance_ $use_ld $ld_threshold $ref_genome_prefix $use_permut $n_permut $coloc_P_threshold $out_prefix  
 
 
 echo "Done!"
