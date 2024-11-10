@@ -11,19 +11,19 @@
 #SBATCH --array=0-1 ## Numer of array should be equal to number of lines in coloc.input.csv file (each line will be run by an array)
 
 
-ScriptDir=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/wgcna/March2024/Scripts/Coloc
+ScriptDir=./Scripts/Coloc
 
-gwas_dir=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/summary_stat
-loci_dir=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/summary_stat/regions
-qtl_dir=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/wgcna/March2024/Results/Coloc
+gwas_dir=./summary_stat
+loci_dir=./regions
+qtl_dir=./QTLs
 
-out_prefix=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/wgcna/March2024/Results/Coloc/darkgreen/darkgreen.Cis
+out_prefix=./Coloc.Results
 
-ref_genome_prefix=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Ref/g1000_eur/g1000_eur_ChrPos
+ref_genome_prefix=./g1000_eur_ChrPos
 
 # Ref genome will use to calculate LD for the lead SNPs in loci file. So, the SNP IDs in Ref genome must be the same as lead SNPs
 
-input_list=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/wgcna/March2024/Results/Coloc/coloc.input.csv 
+input_list=./coloc.input.csv 
 # csv file with 4 columns (1st: GWAS Summary statistics file name, 2nd: loci file name, 3rd: QTL file name, 4th: Output file ID)
 
 
