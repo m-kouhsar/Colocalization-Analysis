@@ -23,7 +23,8 @@ ref_genome_prefix=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Re
 
 # Ref genome will use to calculate LD for the lead SNPs in loci file. So, the SNP IDs in Ref genome must be the same as lead SNPs
 
-input_list=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/wgcna/March2024/Results/Coloc/coloc.input.csv # csv file with 4 columns (1st: GWAS Summary statistics file name, 2nd: loci file name, 3rd: QTL file name, 4th: Output file ID)
+input_list=/lustre/projects/Research_Project-191391/Morteza/Genotyping/Pitts.All/wgcna/March2024/Results/Coloc/coloc.input.csv 
+# csv file with 4 columns (1st: GWAS Summary statistics file name, 2nd: loci file name, 3rd: QTL file name, 4th: Output file ID)
 
 
 distance_=250 #kb
