@@ -1,2 +1,2 @@
-EA_Okbay_2022_formatted.txt,EA.loci.csv,darkgreen.eQTL.Cis.Pval.1e-05.Dist.1e+06.formatted.csv,EA.permut
-SC_2022_eur_formatted.txt,SCZ2022.loci.csv,darkgreen.eQTL.Cis.Pval.1e-05.Dist.1e+06.formatted.csv,SCZ2022.permut
+EA_Okbay_2022_formatted.txt,EA.loci.csv,eQTL.Cis.Pval.1e-05.Dist.1e+06.formatted.csv,EA.permut
+SC_2022_eur_formatted.txt,SCZ2022.loci.csv,eQTL.Cis.Pval.1e-05.Dist.1e+06.formatted.csv,SCZ2022.permut
