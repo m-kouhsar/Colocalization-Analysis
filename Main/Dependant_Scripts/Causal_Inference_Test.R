@@ -11,7 +11,7 @@ genotype_data <- args[2]
 methylation_data <- args[3]
 phenotype_file <- args[4]
 trait <- args[5]
-is_binary_trait <- as.numeric(args[6])
+is_binary_trait <- trimws(args[6])
 covariates_num <- args[7]
 covariates_fact <- args[8]
 n_permutation <- as.numeric(args[9])
@@ -19,20 +19,20 @@ out_prefix <- args[10]
 
 
 print("Input arguments:")
-print(paste("    CpG-SNP pairs:",cpg_snp_pairs))
-print(paste("    Genotype data:",genotype_data))
-print(paste("    Methylation data:",methylation_data))
-print(paste("    Phenotype data:",phenotype_file))
-print(paste("    Trait variable:",trait))
-print(paste("    Is trait binary:",ifelse(is_binary_trait==1,"Yes","NO")))
-print(paste("    Numeric covariates:",covariates_num))
-print(paste("    Factor covariates:",covariates_fact))
-print(paste("    Number of permutation:",n_permutation))
-print(paste("    Output prefix:",out_prefix))
+print(paste("    CpG-SNP pairs: ",cpg_snp_pairs))
+print(paste("    Genotype data: ",genotype_data))
+print(paste("    Methylation data: ",methylation_data))
+print(paste("    Phenotype data: ",phenotype_file))
+print(paste("    Trait variable: ",trait))
+print(paste("    Is trait binary: ",is_binary_trait))
+print(paste("    Numeric covariates: ",covariates_num))
+print(paste("    Factor covariates: ",covariates_fact))
+print(paste("    Number of permutation: ",n_permutation))
+print(paste("    Output prefix: ",out_prefix))
 ##############################
 library(cit)
 library(stringr)
-
+is_binary_trait <- tolower(is_binary_trait)
 print("Reading and preparing inputs...")
 
 betas <- readRDS(methylation_data)
@@ -78,7 +78,7 @@ if((covariates_num!="NA")&(covariates_fact!="NA")){
   }
 }
 
-if(is_binary_trait==1){
+if(is_binary_trait=="yes"){
   trait <- as.numeric(as.factor(pheno[,trait]))
 }else{
   trait <- as.numeric(pheno[,trait])
