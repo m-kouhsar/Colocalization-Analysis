@@ -1,5 +1,5 @@
 
-Coloc.FormatQTLs <- function(QTL.file , Allel.freq.file , N.sample){
+Coloc.FormatQTLs <- function(QTL.file , Allel.freq , N.sample){
   suppressMessages(library(stringr))
   suppressMessages(library(data.table))
   
@@ -14,13 +14,15 @@ Coloc.FormatQTLs <- function(QTL.file , Allel.freq.file , N.sample){
   QTLs$SNP.Pos <- str_split(QTLs$SNPID,pattern=":",simplify=T)[,2]
   QTLs$CHR <- str_split(QTLs$SNPID,pattern=":",simplify=T)[,1]
   
-  print("Reading allele frequency file...")
-  maf <- fread(file=Allel.freq.file, stringsAsFactors=F,data.table=F,header=T,nThread=getDTthreads())
+  if(!(is.data.frame(Allel.freq) | is.matrix(Allel.freq))){
+    print("Reading allele frequency file...")
+    Allel.freq <- fread(file=Allel.freq, stringsAsFactors=F,data.table=F,header=T,nThread=getDTthreads())
+  }
   
   print("Adding MAF to QTLs...")
   snps <- str_split(QTLs$snps, pattern="_" , simplify=T)[,1]
-  index <- match(snps , maf$SNP)
-  QTLs$MAF <- maf$MAF[index]
+  index <- match(snps , Allel.freq$SNP)
+  QTLs$Allel.freq <- Allel.freq$Allel.freq[index]
   
   print("Adding number of samples column...")
   QTLs$N <- N.sample
