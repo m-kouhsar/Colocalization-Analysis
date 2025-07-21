@@ -37,7 +37,7 @@ cat("     Reference genome binary files name (--bfile option in plink)= ",ref.ge
 cat("     Output prefix= ",out.pref,"\n")
 cat('\n')
 cat("     Using random regions for calculating result P-value? ",ifelse(use.permut,"Yes","No"),"\n")
-cat("    Coloc probability threshold= ",p.threshold,"\n")
+cat("     Coloc probability threshold= ",p.threshold,"\n")
 cat("     Number of random regions= ",n.permut,"\n")
 cat("#############################################################################################\n")
 cat("\n")

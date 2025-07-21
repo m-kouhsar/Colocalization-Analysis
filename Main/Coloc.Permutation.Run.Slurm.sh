@@ -3,7 +3,7 @@
 #SBATCH --export=ALL 
 #SBATCH -D . 
 #SBATCH -p mrcq
-#SBATCH --time=48:00:00 
+#SBATCH --time=5:00:00 
 #SBATCH --nodes=1 
 #SBATCH --ntasks-per-node=16 
 #SBATCH --mail-type=END 
@@ -56,6 +56,7 @@
 #  n_permut=1000
 #  out_prefix: Output files prefix
 #  ScriptDir: A directory contains all dependant scripts
+#  Running_time: Estimated time for running the analysis (each row in input_list)
 
 ###########################################################################################################################################
 
@@ -74,10 +75,13 @@ coloc_P_threshold=0.9
 n_permut=1000
 out_prefix=./Results/Sample_coloc
 ScriptDir=./Main/Dependant_Scripts
+Running_time=15:00:00
 
 ###########################################################################################################################################
 
 dos2unix $input_list
 line_count=$(wc -l < $input_list)
 
-sbatch --array=0-$(($line_count - 1)) ${ScriptDir}/Coloc.Permutation.sh $input_list $gwas_dir $loci_dir $qtl_dir $use_ld $ref_genome_prefix $ld_threshold $distance_ $type_QTL $type_GWAS $use_permut $coloc_P_threshold $n_permut $out_prefix $ScriptDir
+sbatch --array=0-$(($line_count - 1)) --time $Running_time ${ScriptDir}/Coloc.Permutation.sh $input_list $gwas_dir $loci_dir $qtl_dir $use_ld $ref_genome_prefix $ld_threshold $distance_ $type_QTL $type_GWAS $use_permut $coloc_P_threshold $n_permut $out_prefix $ScriptDir
+
+echo "$line_count jobs submitted."

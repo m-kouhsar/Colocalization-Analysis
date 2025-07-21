@@ -3,13 +3,14 @@
 #SBATCH --export=ALL 
 #SBATCH -D . 
 #SBATCH -p mrcq
-#SBATCH --time=48:00:00 
 #SBATCH --nodes=1 
 #SBATCH --ntasks-per-node=16 
 #SBATCH --mail-type=END 
 #SBATCH --mail-user=m.kouhsar@exeter.ac.uk 
 
 #################################################################################################################################################################################################################
+
+echo "Job started at $(date '+%H:%M:%S') on $(date '+%d/%m/%Y')"
 
 input_list=$1
 gwas_dir=$2
@@ -20,12 +21,13 @@ ref_genome_prefix=$6
 ld_threshold=$7
 distance_=$8
 type_QTL=$9
-type_GWAS=$10
-use_permut=$11
-coloc_P_threshold=$12
-n_permut=$13
-out_prefix=$14
-ScriptDir=$15
+type_GWAS=${10}
+use_permut=${11}
+coloc_P_threshold=${12}
+n_permut=${13}
+out_prefix=${14}
+ScriptDir=${15}
+
 
 mkdir -p "$(dirname "${out_prefix}")"
 
@@ -57,9 +59,9 @@ loci_file=${loci_dir}/${loci[$SLURM_ARRAY_TASK_ID]}
 gwas_file=${gwas_dir}/${gwas[$SLURM_ARRAY_TASK_ID]}
 qtl_file=${qtl_dir}/${qtl[$SLURM_ARRAY_TASK_ID]}
 
+echo "Find the logs in ${out_prefix}.log.txt"
+
+Rscript ${ScriptDir}/Coloc.Permutation.R   $qtl_file  $gwas_file $loci_file $type_QTL $type_GWAS $distance_ $use_ld $ld_threshold $ref_genome_prefix $use_permut $n_permut $coloc_P_threshold $out_prefix  
 
 
-Rscript ${ScriptDir}/Coloc.Permutation.main.R   $qtl_file  $gwas_file $loci_file $type_QTL $type_GWAS $distance_ $use_ld $ld_threshold $ref_genome_prefix $use_permut $n_permut $coloc_P_threshold $out_prefix  
-
-
-echo "Done!"
+echo "Job finished at $(date '+%H:%M:%S') on $(date '+%d/%m/%Y')"
