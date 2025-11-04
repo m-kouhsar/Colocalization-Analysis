@@ -52,8 +52,8 @@
 #              will be generated. After getting the results on all of these random regions, a P-value will be calculated using the following formula:
 #              Pvalue = (number of random SCR)/1000. 
 #              A Significant Coloc Result (SCR) is a results contains at least one probabilty (H0-H4 or H3+H4) larger than coloc_P_threshold. 
-#  coloc_P_threshold=0.9 A probabilty threshold to define Significant Coloc Results
-#  n_permut=1000
+#  coloc_P_threshold: A probabilty threshold to define Significant Coloc Results (default 0.9)
+#  n_permut: Number of permutation (random regions) to calculate a p-value based on a permutation analysis (default 1000)
 #  out_prefix: Output files prefix
 #  ScriptDir: A directory contains all dependant scripts
 #  Running_time: Estimated time for running the analysis (each row in input_list)
@@ -61,11 +61,11 @@
 ###########################################################################################################################################
 
 input_list=./coloc.input.csv 
-gwas_dir=./summary_stat
-loci_dir=./regions
-qtl_dir=./QTLs
+gwas_dir=/lustre/projects/Research_Project-191391/Morteza/Genotyping/GWAS_Sumstats/Formatted
+loci_dir=/lustre/projects/Research_Project-191391/Morteza/Genotyping/GWAS_Sumstats/regions
+qtl_dir=/lustre/projects/Research_Project-191391/Morteza/Ehsan/Coloc/Nov2025/Raw
 use_ld=yes
-ref_genome_prefix=./g1000_eur_ChrPos
+ref_genome_prefix="/lustre/projects/Research_Project-191391/Morteza/Ref/g1000_eur/g1000_eur_ChrPos_lift_hg38"
 ld_threshold=0.6
 distance_=250
 type_QTL="cc"
@@ -73,9 +73,9 @@ type_GWAS="cc"
 use_permut=yes 
 coloc_P_threshold=0.9
 n_permut=1000
-out_prefix=./Results/Sample_coloc
-ScriptDir=./Main/Dependant_Scripts
-Running_time=15:00:00
+out_prefix=./Results/coloc
+ScriptDir=/lustre/projects/Research_Project-191391/Morteza/github/Colocalization-Analysis/Main/Dependant_Scripts
+Running_time=10:00:00
 
 ###########################################################################################################################################
 
