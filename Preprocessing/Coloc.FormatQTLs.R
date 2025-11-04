@@ -18,8 +18,8 @@ Coloc.FormatQTLs <- function(QTLs , Allel.freq , N.sample){
   message("Converst SNP IDs...")
   QTLs$SE <- abs(QTLs$beta)/abs(QTLs$statistic)
   QTLs$SNP <- paste(str_split(QTLs$snps,pattern=":",simplify=T)[,1],str_split(QTLs$snps,pattern=":",simplify=T)[,2],sep = ":")
-  QTLs$SNP.Pos <- str_split(QTLs$SNPID,pattern=":",simplify=T)[,2]
-  QTLs$CHR <- str_split(QTLs$SNPID,pattern=":",simplify=T)[,1]
+  QTLs$SNP.Pos <- str_split(QTLs$snps,pattern=":",simplify=T)[,2]
+  QTLs$CHR <- str_split(QTLs$snps,pattern=":",simplify=T)[,1]
   
   message("Adding MAF to QTLs...")
   snps <- str_split(QTLs$snps, pattern="_" , simplify=T)[,1]
